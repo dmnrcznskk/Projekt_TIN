@@ -10,32 +10,11 @@
   <link href="styles/custom_colors.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
   <link rel="stylesheet" href="styles/elements_loading.css" />
+  <link rel="stylesheet" href="styles/dropdown_styles.css">
 </head>
  
 <body class="bg-cream">
-  <nav class="navbar navbar-expand-lg navbar-light bg-beige px-4 mb-5">
-    <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="index.html">
-        <img src="img/landing_page_img/logo.png" alt="logo" width="80" height="80" class="me-2" />
-        Hodowla
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
- 
-      <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
-        <div class="navbar-nav">
-          <a class="nav-link fs-5 px-3" href="about_us.html">O nas</a>
-          <a class="nav-link fs-5 px-3 active" href="#">O rasie</a>
-          <a class="nav-link fs-5 px-3" href="#">Nasze koty</a>
-          <a class="nav-link fs-5 px-3" href="#">Mioty</a>
-          <a class="nav-link fs-5 px-3" href="#">Kontakt</a>
-        </div>
-      </div>
-    </div>
-  </nav>
- 
+  <div id="header-placeholder"></div>
   <!-- HERO sekcja -->
   <header class="position-relative text-white text-center py-5" style="background: url('https://images.unsplash.com/photo-1721472759580-45b18b23fa26?q=80&w=3270&auto=format&fit=crop') center/cover no-repeat;">
  
@@ -167,6 +146,12 @@
  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="scripts/elements_loading_animation.js"></script>
+    <script>
+    fetch("partials/header.html")
+      .then(res => res.text())
+      .then(html => document.getElementById("header-placeholder").innerHTML = html);
+
+  </script>
 </body>
  
 </html>
