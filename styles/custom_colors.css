@@ -34,3 +34,8 @@
   .carousel-control-next-icon {
     filter: invert(1) grayscale(1) brightness(0.3);
   }
+
+.btn-outline-mocha.bg-mocha:hover {
+  background-color: #847466 !important; 
+  border-color: #847466 !important;
+}

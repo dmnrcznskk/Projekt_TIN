@@ -11,12 +11,13 @@
   <link href="styles/custom_colors.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="styles/elements_loading.css">
+  <link rel="stylesheet" href="styles/dropdown_styles.css">
 </head>
 
 <body class="bg-cream">
   <nav class="navbar navbar-expand-lg navbar-light bg-beige px-4 mb-5">
     <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="#">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
         <img src="img/landing_page_img/logo.png" alt="logo" width="80" height="80" class="me-2">
         Hodowla
       </a>
@@ -27,16 +28,38 @@
       </button>
 
       <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
-        <div class="navbar-nav">
-          <a class="nav-link fs-5 px-3" href="#">O nas</a>
-          <a class="nav-link fs-5 px-3" href="#">O rasie</a>
-          <a class="nav-link fs-5 px-3" href="#">Nasze koty</a>
-          <a class="nav-link fs-5 px-3" href="#">Mioty</a>
-          <a class="nav-link fs-5 px-3" href="#">Kontakt</a>
-        </div>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link fs-5 px-3" href="about_us.html">O nas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fs-5 px-3" href="about_ragdolls.html">O rasie</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fs-5 px-3" href="our_cats.html">Nasze koty</a>
+          </li>
+
+          <!-- Dropdown Mioty -->
+          <li class="nav-item dropdown position-static">
+            <a class="nav-link dropdown-toggle fs-5 px-3" href="#" id="navbarDropdownMioty" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Mioty
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMioty">
+              <li><a class="dropdown-item" href="miot_c.html">Miot C – 2024</a></li>
+              <li><a class="dropdown-item" href="miot_b.html">Miot B – 2023</a></li>
+              <li><a class="dropdown-item" href="miot_a.html">Miot A – 2022</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link fs-5 px-3" href="contact.html">Kontakt</a>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
+
 
   <section>
     <div class="container-fluid">
