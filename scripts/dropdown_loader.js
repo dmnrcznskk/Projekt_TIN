@@ -1,16 +1,26 @@
 fetch("/api/mioty")
   .then(res => res.json())
-  .then(litters => {
-    const dropdown = document.getElementById("mioty-dropdown");
-    if (!dropdown) return;
+  .then(mioty => {
+    mioty.sort((a, b) => a.localeCompare(b, "pl", { numeric: true }));
 
-    dropdown.innerHTML = "";
+    mioty.reverse();
 
-    litters.forEach(litter => {
-      const link = `miot_template.html?name=${encodeURIComponent(litter)}`;
-      const li = document.createElement("li");
-      li.innerHTML = `<a class="dropdown-item" href="${link}">${litter}</a>`;
-      dropdown.appendChild(li);
+    const listContainer = document.getElementById("mioty-dropdown");
+    if (!listContainer) {
+      console.warn("Nie znaleziono #mioty-dropdown");
+      return;
+    }
+
+    listContainer.innerHTML = "";
+
+    mioty.forEach(miot => {
+      const link = document.createElement("a");
+      link.classList.add("dropdown-item", "text-mocha");
+      link.href = `miot_template.html?name=${encodeURIComponent(miot)}`;
+      link.textContent = miot;
+      listContainer.appendChild(link);
     });
   })
-  .catch(err => console.error("Błąd ładowania miotów:", err));
+  .catch(err => {
+    console.error("Błąd ładowania miotów:", err);
+  });

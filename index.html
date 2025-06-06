@@ -242,7 +242,6 @@
     .then(html => {
       document.getElementById("header-placeholder").innerHTML = html;
 
-      // teraz możemy załadować skrypt do dropdowna
       const script = document.createElement("script");
       script.src = "scripts/dropdown_loader.js";
       document.body.appendChild(script);
