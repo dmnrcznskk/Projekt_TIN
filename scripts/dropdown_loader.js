@@ -1,15 +1,15 @@
 fetch("/api/mioty")
   .then(res => res.json())
-  .then(mioty => {
+  .then(litters => {
     const dropdown = document.getElementById("mioty-dropdown");
     if (!dropdown) return;
 
-    dropdown.innerHTML = ""; // wyczyść statyczne wpisy, jeśli były
+    dropdown.innerHTML = "";
 
-    mioty.forEach(miot => {
-      const link = `miot_${miot.toLowerCase().replace(/\s+/g, "_")}.html`;
+    litters.forEach(litter => {
+      const link = `miot_template.html?name=${encodeURIComponent(litter)}`;
       const li = document.createElement("li");
-      li.innerHTML = `<a class="dropdown-item" href="${link}">${miot}</a>`;
+      li.innerHTML = `<a class="dropdown-item" href="${link}">${litter}</a>`;
       dropdown.appendChild(li);
     });
   })
