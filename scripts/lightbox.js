@@ -25,3 +25,5 @@ function initializeLightbox() {
     if (e.key === "Escape") closeLightbox();
   });
 }
+
+window.initializeLightbox = initializeLightbox;

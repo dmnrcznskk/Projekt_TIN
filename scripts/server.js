@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+const multer = require("multer");
 
 const app = express();
 const PORT = 3000;
@@ -12,37 +13,38 @@ const uploadsPath = path.join(__dirname, "../uploads");
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
 }));
 
-// Serwowanie plików statycznych
-app.use(express.static(path.join(__dirname, "..")));
-
-// Middleware do ochrony panelu admina
-function requireAuth(req, res, next) {
-  if (req.session && req.session.loggedIn) {
-    return next();
-  } else {
+app.use((req, res, next) => {
+  if (req.path === "/admin-panel.html" && (!req.session || !req.session.loggedIn)) {
     return res.redirect("/login.html");
   }
+  next();
+});
+app.use(express.static(path.join(__dirname, "..")));
+
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+function requireAuth(req, res, next) {
+  if (req.session && req.session.loggedIn) return next();
+  return res.redirect("/login.html");
 }
 
-// 🔐 Logowanie
 app.post("/api/login", (req, res) => {
   const { password } = req.body;
   if (password === ADMIN_PASSWORD) {
     req.session.loggedIn = true;
-    res.redirect("/admin-panel.html");
-  } else {
-    res.redirect("/login.html?error=1");
+    return res.redirect("/admin-panel.html");
   }
+  return res.redirect("/login.html?error=1");
 });
 
-// 🔐 Wylogowanie
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.setHeader("Cache-Control", "no-store");
@@ -50,22 +52,20 @@ app.get("/logout", (req, res) => {
   });
 });
 
-// 🔐 Chroniony dostęp do panelu admina
 app.get("/admin-panel.html", requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "../admin-panel.html"));
 });
 
-// 📁 Lista miotów
+//Mioty
 app.get("/api/mioty", (req, res) => {
   fs.readdir(uploadsPath, { withFileTypes: true }, (err, dirs) => {
     if (err) return res.status(500).json({ error: "Błąd czytania katalogu uploads" });
-
     const mioty = dirs.filter(d => d.isDirectory()).map(d => d.name);
     res.json(mioty);
   });
 });
 
-// 📁 Szczegóły jednego miotu
+//Szczegolny miot
 app.get("/api/miot", (req, res) => {
   const litterName = decodeURIComponent(req.query.name);
   if (!litterName) return res.status(400).json({ error: "Brak nazwy miotu" });
@@ -98,7 +98,38 @@ app.get("/api/miot", (req, res) => {
   res.json(result);
 });
 
-// 🟢 Start
+//Dodawanie miotu
+app.post("/api/dodaj-miot", requireAuth, upload.any(), (req, res) => {
+  const litterName = req.body.litterName?.trim();
+  const kittenNames = Array.isArray(req.body.kittenNames)
+    ? req.body.kittenNames.map(k => k.trim())
+    : [req.body.kittenNames?.trim()];
+
+  if (!litterName || !kittenNames || !kittenNames.length) {
+    return res.status(400).send("Nieprawidłowe dane");
+  }
+
+  const litterPath = path.join(uploadsPath, litterName);
+  if (!fs.existsSync(litterPath)) fs.mkdirSync(litterPath);
+
+  kittenNames.forEach((name, index) => {
+    if (!name) return;
+
+    const kittenPath = path.join(litterPath, name);
+    if (!fs.existsSync(kittenPath)) fs.mkdirSync(kittenPath);
+
+    const files = req.files.filter(f => f.fieldname === `kittenImages${index}`);
+    files.forEach(file => {
+      const safeName = file.originalname.replace(/[^\w.\-]/g, "_");
+      const filepath = path.join(kittenPath, safeName);
+      fs.writeFileSync(filepath, file.buffer);
+    });
+  });
+
+  res.redirect("/admin-panel.html");
+});
+
+
 app.listen(PORT, () => {
   console.log(`✅ Serwer działa: http://localhost:${PORT}`);
 });

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (title) title.textContent = litterName;
 
-      data.forEach(kitten => {
+      data.forEach((kitten, index) => {
         const section = document.createElement("section");
         section.className = "mb-5 scroll-reveal";
 
@@ -48,54 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
         container.appendChild(section);
       });
 
-      initializeLightbox();
-      initializeScrollReveal();
+      if (window.initializeLightbox) initializeLightbox();
     })
     .catch(err => {
       console.error("Błąd ładowania danych:", err);
     });
 });
-
-function initializeLightbox() {
-  const overlay = document.getElementById("lightbox-overlay");
-  const image = document.getElementById("lightbox-image");
-  const closeBtn = document.getElementById("lightbox-close");
-
-  document.querySelectorAll(".lightbox-trigger").forEach(img => {
-    img.addEventListener("click", () => {
-      image.src = img.src;
-      overlay.classList.remove("d-none");
-      document.body.style.overflow = "hidden";
-    });
-  });
-
-  function closeLightbox() {
-    overlay.classList.add("d-none");
-    image.src = "";
-    document.body.style.overflow = "";
-  }
-
-  overlay.addEventListener("click", e => {
-    if (e.target === overlay || e.target === closeBtn) closeLightbox();
-  });
-
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeLightbox();
-  });
-}
-
-function initializeScrollReveal() {
-  const elements = document.querySelectorAll('.scroll-reveal');
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, {
-    threshold: 0.1
-  });
-
-  elements.forEach(el => observer.observe(el));
-}
